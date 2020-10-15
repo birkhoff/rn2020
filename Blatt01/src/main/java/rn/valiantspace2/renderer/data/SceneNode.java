@@ -5,19 +5,23 @@ import rn.valiantspace2.renderer.MathBib;
 import rn.valiantspace2.renderer.Renderable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Mike on 11.03.18.
  */
 public class SceneNode {
 
-    SceneNode parent;
-    ArrayList<SceneNode> children;
-    ArrayList<Renderable> renderables = new ArrayList<>();
+    private SceneNode parent;
+    private boolean visibility = true;
+    private List<SceneNode> children = new ArrayList<>();
+    private List<Renderable> renderables = new ArrayList<>();
 
-    float x = 0.f, y = 0.f, z = 0.f;
-    float w = 1.f;
-    float rx, ry, rz;
+    private float[][] lastCalculatedForwardVector = {{0.f}, {0.f}, {0.f}};
+
+    private float x = 0.f, y = 0.f, z = 0.f;
+    private float w = 1.f;
+    private float rx, ry, rz;
 
 
     /**
@@ -85,6 +89,25 @@ public class SceneNode {
         this.z = z;
     }
 
+    public float[][] getTranslate() {
+        float[][] translate = {{this.x}, {this.y}, {this.z}};
+        return translate;
+    }
+
+    public boolean isVisible() {
+        return visibility;
+    }
+
+    public void setVisibility(boolean visibility) {
+        this.visibility = visibility;
+    }
+
+    /**
+     * calculates the forwardVector and also saves the result to the
+     * lastCalculatedForwardVector reference to avoid the same calculation multiple times
+     *
+     * @return
+     */
     public float[][] getForwardVector() {
 
         float[][] forward_vec = {{0.f}, {0.f}, {-1.f}};
@@ -100,12 +123,29 @@ public class SceneNode {
         float[][] rot_z = {{(float) Math.cos(rz), -(float) Math.sin(rz), 0},
                 {(float) Math.sin(rz), (float) Math.cos(rz), 0},
                 {0, 0, 1}};
-
+        // multiply rotation matrices
         float[][] temp_a = MathBib.matrix_mult(rot_z, forward_vec);
         float[][] temp_b = MathBib.matrix_mult(rot_y, temp_a);
         float[][] temp_c = MathBib.matrix_mult(rot_x, temp_b);
+        // save to reference for faster access
+        this.lastCalculatedForwardVector = temp_c;
 
         return temp_c;
+    }
+
+    /**
+     * check if vector was already calculated if so reuse last result
+     *
+     * @return
+     */
+    public float[][] getLastCalculatedForwardVector() {
+        if (lastCalculatedForwardVector[0][0] != 0
+                && lastCalculatedForwardVector[1][0] != 0
+                && lastCalculatedForwardVector[2][0] != 0) {
+            return lastCalculatedForwardVector;
+        } else {
+            return this.getForwardVector();
+        }
     }
 
     public SceneNode getParent() {
@@ -116,7 +156,7 @@ public class SceneNode {
         this.parent = parent;
     }
 
-    public ArrayList<SceneNode> getChildren() {
+    public List<SceneNode> getChildren() {
         return children;
     }
 
@@ -129,7 +169,7 @@ public class SceneNode {
         this.children.add(child);
     }
 
-    public ArrayList<Renderable> getRenderables() {
+    public List<Renderable> getRenderables() {
         return renderables;
     }
 

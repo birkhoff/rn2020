@@ -110,8 +110,7 @@ public class StanfordTriangleParser {
      * @param line
      */
     private void parseVertices(String line, PlyObject plyObject) {
-
-        System.out.println("Parse Vertices: " + line);
+//        System.out.println("Parse Vertices: " + line);
 
         String[] vertexString = line.split("\\s+");
 
@@ -122,8 +121,7 @@ public class StanfordTriangleParser {
         int r = Integer.parseInt(vertexString[6]);
         int g = Integer.parseInt(vertexString[7]);
         int b = Integer.parseInt(vertexString[8]);
-
-
+        
         Vertex vertex = new Vertex(x, y, z, r, g, b);
         plyObject.addVertex(vertex);
     }

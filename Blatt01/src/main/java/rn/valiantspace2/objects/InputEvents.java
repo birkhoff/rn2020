@@ -1,4 +1,4 @@
-package rn.valiantspace2.logic;
+package rn.valiantspace2.objects;
 
 public class InputEvents {
 

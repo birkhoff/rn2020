@@ -1,7 +1,7 @@
 package rn.valiantspace2;
 
-import rn.valiantspace2.logic.InputEvents;
 import rn.valiantspace2.logic.ValiantSpace2Logic;
+import rn.valiantspace2.objects.InputEvents;
 import rn.valiantspace2.renderer.SoftwareRenderer;
 import rn.valiantspace2.renderer.StdDraw;
 
@@ -14,14 +14,22 @@ public class Main {
         SoftwareRenderer renderer = new SoftwareRenderer();
 
 
-//        renderer.add_renderable(level);
+        InputEvents input = new InputEvents();
+
+        StdDraw.text(0, 0, "Press Space to start");
+        StdDraw.text(0, 0.3, "control the spaceship with W, A, S, D");
+        StdDraw.text(0, 0.2, "press Space to fire");
+        StdDraw.show();
+
+        while (!StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
+
+
+        }
+
 
         ValiantSpace2Logic logic = new ValiantSpace2Logic(renderer);
         logic.setUp();
 
-        logic.setUpControls();
-
-        InputEvents input = new InputEvents();
 
         // Get input
         while (!StdDraw.isKeyPressed(KeyEvent.VK_ESCAPE)) {

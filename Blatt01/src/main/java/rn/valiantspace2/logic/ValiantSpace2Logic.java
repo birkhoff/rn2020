@@ -1,8 +1,10 @@
 package rn.valiantspace2.logic;
 
+import rn.valiantspace2.objects.InputEvents;
+import rn.valiantspace2.objects.SpaceShip;
 import rn.valiantspace2.renderer.Camera;
+import rn.valiantspace2.renderer.MathBib;
 import rn.valiantspace2.renderer.SoftwareRenderer;
-import rn.valiantspace2.renderer.data.PlyObject;
 import rn.valiantspace2.renderer.data.SceneNode;
 import rn.valiantspace2.renderer.parser.StanfordTriangleParser;
 
@@ -15,22 +17,21 @@ import java.util.ArrayList;
  */
 public class ValiantSpace2Logic {
 
-    private float PI = 3.14159265359f;
+    private static final String PLAYER_MODEL = "src/main/resources/ship.ply";
+    private static final String OPPONENT_MODEL = "src/main/resources/ship_enemy.ply";
+
+    private static double HIT_DISTANCE = 5.0;
 
     private SoftwareRenderer renderer;
 
+    private SpaceShip shipPlayer;
+    private SpaceShip shipOpponent;
     private Camera cam;
-    private SceneNode ship1;
 
     private ArrayList<SceneNode> LasersIdle = new ArrayList();
     private ArrayList<SceneNode> Lasers = new ArrayList();
 
     long timeSinceLastFrame = 0;
-
-    static float MOVE_SPEED = 0.0075f;
-    static float LASER_SPEED = 0.015f;
-    static float LASER_OFFSET = 10.f;
-    static float ROTATION_SPEED = 0.0025f;
 
 
     /**
@@ -47,69 +48,40 @@ public class ValiantSpace2Logic {
     public void setUp() {
 
         StanfordTriangleParser parser = new StanfordTriangleParser();
-        PlyObject shipPly = parser.parsePlyFile("src/main/resources/ship.ply");
 
-        ship1 = StanfordTriangleParser.fill_ply_object(shipPly, renderer);
-        renderer.add_renderable(ship1);
-        ship1.setTranslate(0, 0, 0);
+        shipPlayer = new SpaceShip(renderer, parser, PLAYER_MODEL);
+        shipOpponent = new SpaceShip(renderer, parser, OPPONENT_MODEL);
 
         cam = renderer.get_camera();
         cam.set_position(0, 40.0f, 0);
-        cam.add_rotation_x(-PI / 2);
-
-        // preload lasers
-        PlyObject laserPly = parser.parsePlyFile("src/main/resources/laser.ply");
-        for (int i = 0; i < 10; i++) {
-            SceneNode laser = StanfordTriangleParser.fill_ply_object(laserPly, renderer);
-            LasersIdle.add(laser);
-        }
-
+        cam.add_rotation_x(-MathBib.PI / 2);
     }
 
-    public void setUpControls() {
-
-
-    }
 
     public void update(InputEvents inputEvents) {
 
+        InputEvents inputEventsOpponent = new InputEvents();
 
-        if (inputEvents.isTurnLeft())
-            ship1.setRy(ship1.getRy() + ROTATION_SPEED * timeSinceLastFrame);
-        if (inputEvents.isTurnRight())
-            ship1.setRy(ship1.getRy() - ROTATION_SPEED * timeSinceLastFrame);
-
-        if (inputEvents.isForward()) {
-            float[][] forward = ship1.getForwardVector();
-            float x = forward[0][0] * MOVE_SPEED * timeSinceLastFrame;
-            float y = forward[1][0] * MOVE_SPEED * timeSinceLastFrame;
-            float z = forward[2][0] * MOVE_SPEED * timeSinceLastFrame;
-
-            ship1.setTranslate(ship1.getX() - x,
-                    ship1.getY() + y,
-                    ship1.getZ() + z);
-        }
-
-        if (inputEvents.isFire()) {
-            float[][] forward = ship1.getForwardVector();
-            float x = ship1.getX() - forward[0][0] * LASER_OFFSET;
-            float y = ship1.getY() + forward[1][0] * LASER_OFFSET;
-            float z = ship1.getZ() + forward[2][0] * LASER_OFFSET;
-
-            if (!LasersIdle.isEmpty()) {
-                SceneNode laser = LasersIdle.remove(0);
-                Lasers.add(laser);
-                laser.setTranslate(x, y, z);
-                laser.setRx(ship1.getRx());
-                laser.setRy(ship1.getRy());
-                laser.setRz(ship1.getRz());
-                renderer.add_renderable(laser);
-            }
-        }
+        shipPlayer.updateShip(timeSinceLastFrame, inputEvents, renderer);
+        shipOpponent.updateShip(timeSinceLastFrame, inputEventsOpponent, renderer);
+        // check collision
+        checkCollision(shipPlayer, shipOpponent);
+        checkCollision(shipOpponent, shipPlayer);
 
         // draw
         timeSinceLastFrame = renderer.render();
 
-
     }
+
+    private void checkCollision(SpaceShip shipFired, SpaceShip shipHit) {
+        if (shipHit.canBeHit()) {
+            for (SceneNode laser : shipFired.getLasers()) {
+                double distance = MathBib.getDistance(laser.getTranslate(), shipHit.getNode().getTranslate());
+                if (distance < HIT_DISTANCE) {
+                    shipHit.hit();
+                }
+            }
+        }
+    }
+
 }

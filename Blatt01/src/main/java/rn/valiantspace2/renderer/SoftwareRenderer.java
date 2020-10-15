@@ -4,6 +4,7 @@ package rn.valiantspace2.renderer;
 import rn.valiantspace2.renderer.data.SceneNode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,8 +26,6 @@ public class SoftwareRenderer {
     final float screen_scale_max_y = 1;
 
     boolean draw_raster = false;
-
-//	ArrayList<Renderable> renderables;
 
     ArrayList<SceneNode> sceneNodes;
     ArrayList<Polygon> drawablePolygons;
@@ -62,26 +61,28 @@ public class SoftwareRenderer {
      *
      * @return time elapsed for calculating frame
      */
-
     public long render() {
         long startTime = System.currentTimeMillis();
         StdDraw.clear();
         drawablePolygons.clear();
         float[][] modelView = cam.get_model_view_matrix();
-        this.rotatePolygongs(modelView);
+        this.rotatePolygongs(sceneNodes, modelView);
         this.drawPolygongs();
         StdDraw.show();
         return System.currentTimeMillis() - startTime;
     }
 
-    private void rotatePolygongs(float[][] modelView) {
-        for (SceneNode node : sceneNodes) {
-            float[][] nodeTransform = node.getTransform();
-            for (Renderable r : node.getRenderables()) {
-                float[][] rolled_points = this.get_points_through_model_view_matrix(r, modelView, nodeTransform);
-                this.add_polygons_to_drawable_polygons(rolled_points, r.get_number_of_polygons(), r.get_color());
+    private void rotatePolygongs(List<SceneNode> nodes, float[][] modelView) {
+        for (SceneNode node : nodes) {
+            if (node.isVisible()) {
+                float[][] nodeTransform = node.getTransform();
+                for (Renderable r : node.getRenderables()) {
+                    float[][] rolled_points = this.get_points_through_model_view_matrix(r, modelView, nodeTransform);
+                    this.add_polygons_to_drawable_polygons(rolled_points, r.get_number_of_polygons(), r.get_color());
+                }
+                // traverse children
+                this.rotatePolygongs(node.getChildren(), MathBib.matrix_mult(modelView, nodeTransform));
             }
-//        for (SceneNode child : node.getChildren());
         }
     }
 

@@ -1,4 +1,4 @@
-package rn.vs2.renderer.data;
+package rn.valiantspace2.renderer.data;
 
 /**
  * Created by Mike on 11.03.18.

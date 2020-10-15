@@ -1,8 +1,8 @@
-package rn.vs2.renderer.data;
+package rn.valiantspace2.renderer.data;
 
 
-import rn.vs2.renderer.MathBib;
-import rn.vs2.renderer.Renderable;
+import rn.valiantspace2.renderer.MathBib;
+import rn.valiantspace2.renderer.Renderable;
 
 import java.util.ArrayList;
 
@@ -85,6 +85,29 @@ public class SceneNode {
         this.z = z;
     }
 
+    public float[][] getForwardVector() {
+
+        float[][] forward_vec = {{0.f}, {0.f}, {-1.f}};
+
+        float[][] rot_x = {{1, 0, 0},
+                {0, (float) Math.cos(rx), -(float) Math.sin(rx)},
+                {0, (float) Math.sin(rx), (float) Math.cos(rx)}};
+
+        float[][] rot_y = {{(float) Math.cos(ry), 0, (float) Math.sin(ry)},
+                {0, 1, 0},
+                {(float) -Math.sin(ry), 0, (float) Math.cos(ry)}};
+
+        float[][] rot_z = {{(float) Math.cos(rz), -(float) Math.sin(rz), 0},
+                {(float) Math.sin(rz), (float) Math.cos(rz), 0},
+                {0, 0, 1}};
+
+        float[][] temp_a = MathBib.matrix_mult(rot_z, forward_vec);
+        float[][] temp_b = MathBib.matrix_mult(rot_y, temp_a);
+        float[][] temp_c = MathBib.matrix_mult(rot_x, temp_b);
+
+        return temp_c;
+    }
+
     public SceneNode getParent() {
         return parent;
     }
@@ -99,6 +122,11 @@ public class SceneNode {
 
     public void setChildren(ArrayList<SceneNode> children) {
         this.children = children;
+    }
+
+    public void addChild(SceneNode child) {
+        child.setParent(child);
+        this.children.add(child);
     }
 
     public ArrayList<Renderable> getRenderables() {

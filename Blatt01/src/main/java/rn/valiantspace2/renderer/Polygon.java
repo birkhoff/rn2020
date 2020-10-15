@@ -1,4 +1,4 @@
-package rn.vs2.renderer;
+package rn.valiantspace2.renderer;
 
 /**
  * This class handles a polygon which is a primitive 2D shape

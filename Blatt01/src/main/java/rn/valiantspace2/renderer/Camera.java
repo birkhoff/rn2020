@@ -1,4 +1,4 @@
-package rn.vs2.renderer;
+package rn.valiantspace2.renderer;
 
 /**
  * This class defines the camera of a 3D Renderer
@@ -7,9 +7,9 @@ package rn.vs2.renderer;
  */
 public class Camera {
 
-    float x, y, z;            // position of camera
-    float rx, ry, rz;            // rotation of camera on each axis
-    float focal;            // focal length of virtual camera
+    float x, y, z;      // position of camera
+    float rx, ry, rz;   // rotation of camera on each axis
+    float focal;        // focal length of virtual camera
     float w = 1;
 
     float screen_dimensions[];
@@ -54,11 +54,8 @@ public class Camera {
 
 
         x += temp_c[0][0];
-        //y += temp_c[1][0]; // stick to the ground
+        //y += temp_c[1][0]; // comment this line to stick to the ground
         z += temp_c[2][0];
-
-//		System.out.println("Position Camera: ("+ x +", "+ y +", "+ z +")");
-
     }
 
     public void set_height(float height) {
@@ -75,23 +72,23 @@ public class Camera {
         return y;
     }
 
-    public void set_rotation_values(float rx, float ry) {
+    public void add_rotation_values(float rx, float ry) {
         this.rx += rx;
         this.ry += ry;
     }
 
-    public void set_rotation_x(float rx) {
+    public void add_rotation_x(float rx) {
         this.rx += rx;
     }
 
-    public void set_rotation_y(float ry) {
+    public void add_rotation_y(float ry) {
         this.ry += ry;
     }
 
     /**
      * Model View Matrix of the camera.
      * Each point which is multiplied with this matrix will be transformed from
-     * 3D coordinates to 2D coordinates similar to a pinhole camera
+     * 3D coordinates to 2D coordinates
      *
      * @return returns the model view matrix
      */
@@ -139,5 +136,28 @@ public class Camera {
         return temp_d;
     }
 
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public float getRx() {
+        return rx;
+    }
+
+    public float getRy() {
+        return ry;
+    }
+
+    public float getRz() {
+        return rz;
+    }
 }
 

@@ -1,12 +1,12 @@
-package rn.vs2.renderer.parser;
+package rn.valiantspace2.renderer.parser;
 
 
-import rn.vs2.renderer.Renderable;
-import rn.vs2.renderer.SoftwareRenderer;
-import rn.vs2.renderer.data.Index;
-import rn.vs2.renderer.data.PlyObject;
-import rn.vs2.renderer.data.SceneNode;
-import rn.vs2.renderer.data.Vertex;
+import rn.valiantspace2.renderer.Renderable;
+import rn.valiantspace2.renderer.SoftwareRenderer;
+import rn.valiantspace2.renderer.data.Index;
+import rn.valiantspace2.renderer.data.PlyObject;
+import rn.valiantspace2.renderer.data.SceneNode;
+import rn.valiantspace2.renderer.data.Vertex;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -36,16 +36,19 @@ public class StanfordTriangleParser {
     }
 
 
+    /**
+     * parse Stanford triangle mesh into PlyObject
+     *
+     * @param filePath
+     * @return Plyobject to use with the Software Renderer
+     */
     public PlyObject parsePlyFile(String filePath) {
-
         PlyObject ply = new PlyObject();
 
         try {
-
             FileReader input = new FileReader(filePath);
             BufferedReader bufRead = new BufferedReader(input);
             String currentLine;
-
 
             mState = ParserState.PARSE_HEADER;
             int currentVertexIndex = 1;
@@ -108,7 +111,7 @@ public class StanfordTriangleParser {
      */
     private void parseVertices(String line, PlyObject plyObject) {
 
-//        System.out.println("Parse Vertices: "+ line);
+        System.out.println("Parse Vertices: " + line);
 
         String[] vertexString = line.split("\\s+");
 
@@ -132,16 +135,11 @@ public class StanfordTriangleParser {
      * @param plyObject
      */
     private void parseIndices(String line, PlyObject plyObject) {
-
 //        System.out.println("Parse Indices: "+ line);
-
         // last line is always empty so check if we finished parsing
         if (!line.isEmpty()) {
-
             String[] indexString = line.split("\\s+");
-
             int vertexCountOfPolygon = Integer.parseInt(indexString[0]);
-
             // check if current polygon is actually an quad
             if (vertexCountOfPolygon == 4) {
 
@@ -151,14 +149,13 @@ public class StanfordTriangleParser {
                 int d = Integer.parseInt(indexString[4]);
 
                 Index index = new Index(a, b, c, d);
-
                 plyObject.addIndex(index);
-
             } else {
-                System.out.println("! ERROR: " + line + "\nLine is not applicable for quads!");
+                System.out.println("! ERROR: " + line
+                        + "\nLine is not applicable for quads! Vertex count is: "
+                        + vertexCountOfPolygon);
             }
         } else {
-
             mState = ParserState.FINISHED;
         }
     }
@@ -198,8 +195,6 @@ public class StanfordTriangleParser {
             sceneNode.addRenderablePolygon(renderable);
         }
 
-
-        renderer.add_renderable(sceneNode);
         return sceneNode;
     }
 }

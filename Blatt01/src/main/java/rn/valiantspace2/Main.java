@@ -1,17 +1,13 @@
-package rn.vs2;
+package rn.valiantspace2;
 
-import rn.vs2.logic.InputEvents;
-import rn.vs2.logic.ValiantSpace2Logic;
-import rn.vs2.renderer.SoftwareRenderer;
-import rn.vs2.renderer.StdDraw;
+import rn.valiantspace2.logic.InputEvents;
+import rn.valiantspace2.logic.ValiantSpace2Logic;
+import rn.valiantspace2.renderer.SoftwareRenderer;
+import rn.valiantspace2.renderer.StdDraw;
 
 import java.awt.event.KeyEvent;
 
 public class Main {
-
-    static float move_speed = 0.008f;
-    static float rotation_speed = 0.04f;
-    static float cam_x = 0, cam_y = 0, cam_z = 0;
 
 
     public static void main(String[] args) {
@@ -30,6 +26,7 @@ public class Main {
         // Get input
         while (!StdDraw.isKeyPressed(KeyEvent.VK_ESCAPE)) {
 
+            input.reset();
             // process input
             if (StdDraw.isKeyPressed(KeyEvent.VK_W))
                 input.setForward(true);
@@ -37,8 +34,10 @@ public class Main {
                 input.setTurnLeft(true);
             if (StdDraw.isKeyPressed(KeyEvent.VK_D))
                 input.setTurnRight(true);
+            if (StdDraw.isKeyPressed(KeyEvent.VK_SPACE))
+                input.setFire(true);
 
-            logic.control(input);
+            logic.update(input);
         }
 
     }

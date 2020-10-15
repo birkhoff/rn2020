@@ -1,7 +1,7 @@
-package rn.vs2.renderer;
+package rn.valiantspace2.renderer;
 
 
-import rn.vs2.renderer.data.SceneNode;
+import rn.valiantspace2.renderer.data.SceneNode;
 
 import java.util.ArrayList;
 
@@ -65,23 +65,27 @@ public class SoftwareRenderer {
 
     public long render() {
         long startTime = System.currentTimeMillis();
-
         StdDraw.clear();
         drawablePolygons.clear();
-
         float[][] modelView = cam.get_model_view_matrix();
+        this.rotatePolygongs(modelView);
+        this.drawPolygongs();
+        StdDraw.show();
+        return System.currentTimeMillis() - startTime;
+    }
 
+    private void rotatePolygongs(float[][] modelView) {
         for (SceneNode node : sceneNodes) {
             float[][] nodeTransform = node.getTransform();
             for (Renderable r : node.getRenderables()) {
                 float[][] rolled_points = this.get_points_through_model_view_matrix(r, modelView, nodeTransform);
                 this.add_polygons_to_drawable_polygons(rolled_points, r.get_number_of_polygons(), r.get_color());
             }
+//        for (SceneNode child : node.getChildren());
         }
+    }
 
-
-        //System.out.println(drawablePolygons.size());
-
+    private void drawPolygongs() {
         // draw polygons
         for (int i = 0; i < drawablePolygons.size(); i++) {
             int color[] = drawablePolygons.get(i).get_color();
@@ -95,12 +99,6 @@ public class SoftwareRenderer {
                         drawablePolygons.get(i).get_y_coords());
             }
         }
-
-        StdDraw.show();
-
-        return System.currentTimeMillis() - startTime;
-
-
     }
 
 
@@ -188,6 +186,10 @@ public class SoftwareRenderer {
 
     public void add_renderable(SceneNode renderableSceneNode) {
         sceneNodes.add(renderableSceneNode);
+    }
+
+    public void remove_renderable(SceneNode renderableSceneNode) {
+        sceneNodes.remove(renderableSceneNode);
     }
 
 

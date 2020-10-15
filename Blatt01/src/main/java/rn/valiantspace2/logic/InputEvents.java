@@ -1,10 +1,11 @@
-package rn.vs2.logic;
+package rn.valiantspace2.logic;
 
 public class InputEvents {
 
     boolean forward = false;
     boolean turnLeft = false;
     boolean turnRight = false;
+    boolean fire = false;
 
     public InputEvents() {
 
@@ -14,6 +15,7 @@ public class InputEvents {
         this.forward = false;
         this.turnLeft = false;
         this.turnRight = false;
+        this.fire = false;
     }
 
     public boolean isForward() {
@@ -38,5 +40,13 @@ public class InputEvents {
 
     public void setTurnRight(boolean turnRight) {
         this.turnRight = turnRight;
+    }
+
+    public boolean isFire() {
+        return fire;
+    }
+
+    public void setFire(boolean fire) {
+        this.fire = fire;
     }
 }

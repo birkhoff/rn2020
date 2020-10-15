@@ -12,26 +12,17 @@ public class Main {
 
     public static void main(String[] args) {
         SoftwareRenderer renderer = new SoftwareRenderer();
-
-
         InputEvents input = new InputEvents();
-
-        StdDraw.text(0, 0, "Press Space to start");
-        StdDraw.text(0, 0.3, "control the spaceship with W, A, S, D");
-        StdDraw.text(0, 0.2, "press Space to fire");
-        StdDraw.show();
+        displayStartText();
 
         while (!StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
 
 
         }
 
-
         ValiantSpace2Logic logic = new ValiantSpace2Logic(renderer);
         logic.setUp();
 
-
-        // Get input
         while (!StdDraw.isKeyPressed(KeyEvent.VK_ESCAPE)) {
 
             input.reset();
@@ -48,6 +39,13 @@ public class Main {
             logic.update(input);
         }
 
+    }
+
+    public static void displayStartText() {
+        StdDraw.text(0, 0, "Press Space to start");
+        StdDraw.text(0, 0.3, "control the spaceship with W, A, S, D");
+        StdDraw.text(0, 0.2, "press Space to fire");
+        StdDraw.show();
     }
 
 }

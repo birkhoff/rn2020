@@ -21,6 +21,7 @@ public class SpaceShip {
     private float BLINK_RATE = 100.f;
     private float BLINK_DURATION = 1000.f;
     private float ROLL_SPEED = 0.005f;
+    private float ROLL_UNDO_SPEED = 0.95f;
 
     public static final float ARENA_BOUNDS = 45.0f;
 
@@ -159,10 +160,8 @@ public class SpaceShip {
         this.updateLasers(timeSinceLastFrame, renderer);
         // place ship on the opposite screen edge after it flies out of bounds
         this.checkForBounds();
-
         // cosmetics
         this.roll();
-
         if (this.hit) {
             this.hitSequence(timeSinceLastFrame);
         }
@@ -170,7 +169,7 @@ public class SpaceShip {
 
     private void roll() {
         if (!rolling) {
-            this.roll = roll * 0.95f;
+            this.roll = roll * ROLL_UNDO_SPEED;
         }
         shipNode.setRz(roll);
     }

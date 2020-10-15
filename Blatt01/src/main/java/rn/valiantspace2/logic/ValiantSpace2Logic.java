@@ -45,6 +45,11 @@ public class ValiantSpace2Logic {
     }
 
 
+    /**
+     * setup game state
+     * make camera look down upon players
+     * load ships
+     */
     public void setUp() {
 
         StanfordTriangleParser parser = new StanfordTriangleParser();
@@ -58,6 +63,12 @@ public class ValiantSpace2Logic {
     }
 
 
+    /**
+     * Updates game logic
+     * check for input events, updates ship movement and check for hits
+     *
+     * @param inputEvents
+     */
     public void update(InputEvents inputEvents) {
 
         InputEvents inputEventsOpponent = new InputEvents();
@@ -70,9 +81,14 @@ public class ValiantSpace2Logic {
 
         // draw
         timeSinceLastFrame = renderer.render();
-
     }
 
+    /**
+     * Check for collision
+     *
+     * @param shipFired ship that has fires lasers
+     * @param shipHit   ship that is checked for a hit
+     */
     private void checkCollision(SpaceShip shipFired, SpaceShip shipHit) {
         if (shipHit.canBeHit()) {
             for (SceneNode laser : shipFired.getLasers()) {

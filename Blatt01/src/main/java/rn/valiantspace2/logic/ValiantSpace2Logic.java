@@ -50,12 +50,15 @@ public class ValiantSpace2Logic {
      * make camera look down upon players
      * load ships
      */
-    public void setUp() {
+    public void setUp(InputEvents inputLocalPlayer, InputEvents inputNetworkPlayer) {
 
         StanfordTriangleParser parser = new StanfordTriangleParser();
 
         shipPlayer = new SpaceShip(renderer, parser, PLAYER_MODEL);
         shipOpponent = new SpaceShip(renderer, parser, OPPONENT_MODEL);
+
+        this.placeSpaceship(shipPlayer, inputLocalPlayer);
+        this.placeSpaceship(shipOpponent, inputNetworkPlayer);
 
         cam = renderer.get_camera();
         cam.set_position(0, 40.0f, 0);
@@ -67,20 +70,29 @@ public class ValiantSpace2Logic {
      * Updates game logic
      * check for input events, updates ship movement and check for hits
      *
-     * @param inputEvents
+     * @param inputLocalPlayer   input from local device
+     * @param inputNetworkPlayer input from network player
      */
-    public void update(InputEvents inputEvents) {
+    public void update(InputEvents inputLocalPlayer, InputEvents inputNetworkPlayer) {
 
-        InputEvents inputEventsOpponent = new InputEvents();
-
-        shipPlayer.updateShip(timeSinceLastFrame, inputEvents, renderer);
-        shipOpponent.updateShip(timeSinceLastFrame, inputEventsOpponent, renderer);
+        shipPlayer.updateShip(timeSinceLastFrame, inputLocalPlayer, renderer);
+        shipOpponent.updateShip(timeSinceLastFrame, inputNetworkPlayer, renderer);
         // check collision
         checkCollision(shipPlayer, shipOpponent);
         checkCollision(shipOpponent, shipPlayer);
-
         // draw
         timeSinceLastFrame = renderer.render();
+    }
+
+    /**
+     * Set initial position in space for a ship
+     *
+     * @param ship
+     * @param inputEvents
+     */
+    private void placeSpaceship(SpaceShip ship, InputEvents inputEvents) {
+        ship.getNode().setTranslate(inputEvents.getStartX(), 0, inputEvents.getStartZ());
+        ship.getNode().setRy(inputEvents.getStartRy());
     }
 
     /**

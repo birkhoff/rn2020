@@ -20,11 +20,8 @@ public class SpaceShip {
     private static float FIRE_RATE = 500.f;
     private float BLINK_RATE = 100.f;
     private float BLINK_DURATION = 1000.f;
-    private float ROLL_SPEED = 0.005f;
+    private float ROLL_SPEED = 0.01f;
     private float ROLL_UNDO_SPEED = 0.95f;
-
-    public static final float ARENA_BOUNDS = 45.0f;
-
 
     private float roll = 0.f;
     private boolean rolling = false;
@@ -191,20 +188,20 @@ public class SpaceShip {
     }
 
     private void checkForBounds() {
-        if (shipBase.getX() > ARENA_BOUNDS) {
-            shipBase.setX(-ARENA_BOUNDS);
+        if (shipBase.getX() > ValiantSpace2.ARENA_BOUNDS) {
+            shipBase.setX(-ValiantSpace2.ARENA_BOUNDS);
         }
 
-        if (shipBase.getX() < -ARENA_BOUNDS) {
-            shipBase.setX(ARENA_BOUNDS);
+        if (shipBase.getX() < -ValiantSpace2.ARENA_BOUNDS) {
+            shipBase.setX(ValiantSpace2.ARENA_BOUNDS);
         }
 
-        if (shipBase.getZ() > ARENA_BOUNDS) {
-            shipBase.setZ(-ARENA_BOUNDS);
+        if (shipBase.getZ() > ValiantSpace2.ARENA_BOUNDS) {
+            shipBase.setZ(-ValiantSpace2.ARENA_BOUNDS);
         }
 
-        if (shipBase.getZ() < -ARENA_BOUNDS) {
-            shipBase.setZ(ARENA_BOUNDS);
+        if (shipBase.getZ() < -ValiantSpace2.ARENA_BOUNDS) {
+            shipBase.setZ(ValiantSpace2.ARENA_BOUNDS);
         }
     }
 

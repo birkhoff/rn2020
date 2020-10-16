@@ -7,6 +7,10 @@ public class InputEvents {
     boolean turnRight = false;
     boolean fire = false;
 
+    float startX = 0.f;
+    float startZ = 0.f;
+    float startRy = 0.f;
+
     public InputEvents() {
 
     }
@@ -48,5 +52,29 @@ public class InputEvents {
 
     public void setFire(boolean fire) {
         this.fire = fire;
+    }
+
+    public float getStartX() {
+        return startX;
+    }
+
+    public void setStartX(float startX) {
+        this.startX = startX;
+    }
+
+    public float getStartZ() {
+        return startZ;
+    }
+
+    public void setStartZ(float startZ) {
+        this.startZ = startZ;
+    }
+
+    public float getStartRy() {
+        return startRy;
+    }
+
+    public void setStartRy(float startR) {
+        this.startRy = startR;
     }
 }

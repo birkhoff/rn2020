@@ -14,6 +14,6 @@ public class ClientB {
      */
     public static void main(String[] args) {
         ValiantSpace2 game = new ValiantSpace2();
-        game.runGame();
+        game.runGame("localhost", 1234);
     }
 }

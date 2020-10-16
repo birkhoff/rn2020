@@ -17,7 +17,7 @@ public class SpaceShip {
     private static float LASER_OFFSET = 10.f;
     private static float LASER_SPEED = 0.05f;
     private static float LADER_RADIUS = 50.f;
-    private static float FIRE_RATE = 500.f;
+    private static float FIRE_RATE = 750.f;
     private float BLINK_RATE = 100.f;
     private float BLINK_DURATION = 1000.f;
     private float ROLL_SPEED = 0.01f;

@@ -1,6 +1,8 @@
 package rn.valiantspace2.objects;
 
 import rn.valiantspace2.logic.ValiantSpace2Logic;
+import rn.valiantspace2.network.DummyNetworkManager;
+import rn.valiantspace2.network.NetworkManager;
 import rn.valiantspace2.renderer.MathBib;
 import rn.valiantspace2.renderer.SoftwareRenderer;
 import rn.valiantspace2.renderer.StdDraw;
@@ -14,42 +16,74 @@ public class ValiantSpace2 {
 
     public static final float ARENA_BOUNDS = 45.0f;
 
+    private NetworkManager networkManager;
+    private InputEvents inputLocalPlayer = new InputEvents();
+    private InputEvents inputNetworkPlayer = new InputEvents();
+    private SoftwareRenderer renderer;
+
     public ValiantSpace2() {
     }
 
     /**
      * Game loop
      */
-    public void runGame() {
+    public void runGame(String secondClientAddress, int secondClientPort) {
 
-        // set up
-        SoftwareRenderer renderer = new SoftwareRenderer();
-        InputEvents inputLocalPlayer = new InputEvents();
-        InputEvents inputNetworkPlayer = new InputEvents();
-        this.displayStartText();
-
-        // randomize start position
-        this.randomizeStartPosition(inputLocalPlayer);
-
-        while (!StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
-
-
-        }
-
+        this.setUpGame(secondClientAddress, secondClientPort);
+        this.waitForPlayersLoop();
         ValiantSpace2Logic logic = new ValiantSpace2Logic(renderer);
-        logic.setUp(inputLocalPlayer, inputNetworkPlayer);
-
-        // game loop
-        while (!StdDraw.isKeyPressed(KeyEvent.VK_ESCAPE)) {
-
-            this.receiveLocalInput(inputLocalPlayer);
-
-            logic.update(inputLocalPlayer, inputNetworkPlayer);
-        }
-
+        logic.initializeGameState(inputLocalPlayer, inputNetworkPlayer);
+        this.runGameLoop(logic);
     }
 
-    private void receiveLocalInput(InputEvents inputLocalPlayer) {
+    private void setUpGame(String secondClientAddress, int secondClientPort) {
+        // set up network handler
+        networkManager = new DummyNetworkManager();
+        networkManager.setAddressAndPort(secondClientAddress, secondClientPort);
+        // set up input
+        renderer = new SoftwareRenderer();
+        inputLocalPlayer = new InputEvents();
+        inputNetworkPlayer = new InputEvents();
+        // display additional text to explain user input
+        this.displayStartText();
+        // randomize start position and send it to network player
+        this.randomizeStartPosition(inputLocalPlayer);
+        networkManager.sendInput(inputLocalPlayer);
+    }
+
+    private void waitForPlayersLoop() {
+        // Both Players have to trigger the fire command to start the game
+        boolean waitForLocalPlayer = true;
+        boolean waitForNetworkPlayer = true;
+        while (waitForLocalPlayer || waitForNetworkPlayer) {
+            // get local input
+            this.getLocalInput(inputLocalPlayer);
+            // send and receive
+            networkManager.getNetworkInput(inputNetworkPlayer);
+            networkManager.sendInput(inputLocalPlayer);
+
+            if (inputLocalPlayer.isFire())
+                waitForLocalPlayer = false;
+
+            if (inputNetworkPlayer.isFire())
+                waitForNetworkPlayer = false;
+        }
+    }
+
+    private void runGameLoop(ValiantSpace2Logic logic) {
+
+        while (!StdDraw.isKeyPressed(KeyEvent.VK_ESCAPE)) {
+            // get local input
+            this.getLocalInput(inputLocalPlayer);
+            // send and receive
+            networkManager.getNetworkInput(inputNetworkPlayer);
+            networkManager.sendInput(inputLocalPlayer);
+            // update logic with input from local and network player
+            logic.update(inputLocalPlayer, inputNetworkPlayer);
+        }
+    }
+
+    private void getLocalInput(InputEvents inputLocalPlayer) {
         inputLocalPlayer.reset();
         // process input
         if (StdDraw.isKeyPressed(KeyEvent.VK_W))
@@ -64,7 +98,7 @@ public class ValiantSpace2 {
 
     private void displayStartText() {
         StdDraw.text(0, 0, "Press Space to start");
-        StdDraw.text(0, 0.3, "control the spaceship with W, A, S, D");
+        StdDraw.text(0, 0.3, "control the spaceship with W, A, D");
         StdDraw.text(0, 0.2, "press Space to fire");
         StdDraw.show();
     }

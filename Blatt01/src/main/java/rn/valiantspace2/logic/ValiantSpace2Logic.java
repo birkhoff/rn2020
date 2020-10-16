@@ -50,7 +50,7 @@ public class ValiantSpace2Logic {
      * make camera look down upon players
      * load ships
      */
-    public void setUp(InputEvents inputLocalPlayer, InputEvents inputNetworkPlayer) {
+    public void initializeGameState(InputEvents inputLocalPlayer, InputEvents inputNetworkPlayer) {
 
         StanfordTriangleParser parser = new StanfordTriangleParser();
 

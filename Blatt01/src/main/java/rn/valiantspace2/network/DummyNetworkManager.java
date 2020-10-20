@@ -25,16 +25,14 @@ public class DummyNetworkManager implements NetworkManager {
     @Override
     public void sendInput(InputEvents inputEvents) {
 
-        System.out.println("===== Packet ====="
-                + "\nSending Input to '" + secondClientAddress + ":" + secondClientPort
-                + "\nfire: " + inputEvents.isFire()
-                + "\nforward: " + inputEvents.isForward()
-                + "\nleft: " + inputEvents.isTurnLeft()
-                + "\nright: " + inputEvents.isTurnRight()
-                + "\nstartX: " + inputEvents.getStartX()
-                + "\nstartZ: " + inputEvents.getStartZ()
-                + "\nstartRy: " + inputEvents.getStartRy()
-                + "\n===== ====== ====="
+        System.out.println("VS2 Packet"
+                + "\n" + inputEvents.isFire()
+                + "\n" + inputEvents.isForward()
+                + "\n" + inputEvents.isTurnLeft()
+                + "\n" + inputEvents.isTurnRight()
+                + "\n" + inputEvents.getStartX()
+                + "\n" + inputEvents.getStartZ()
+                + "\n" + inputEvents.getStartRy()
         );
     }
 

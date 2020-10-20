@@ -25,6 +25,9 @@ public class DummyNetworkManager implements NetworkManager {
     @Override
     public void sendInput(InputEvents inputEvents) {
 
+        /*TODO
+         * Implementieren Sie den Versand der Eingaben
+         * */
         System.out.println("VS2 Packet"
                 + "\n" + inputEvents.isFire()
                 + "\n" + inputEvents.isForward()
@@ -38,6 +41,10 @@ public class DummyNetworkManager implements NetworkManager {
 
     @Override
     public void getNetworkInput(InputEvents inputEvents) {
+
+        /*TODO
+         * Implementieren Sie die Verarbeitung der Eingaben
+         * */
 
         inputEvents.reset();
 

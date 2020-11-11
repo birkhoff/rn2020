@@ -10,6 +10,7 @@ public class DummyNetworkManager implements NetworkManager {
 
     private String secondClientAddress;
     private int secondClientPort;
+    private int localPort;
 
     /**
      * Constructor which receives the ip address of the second client to connect to
@@ -17,9 +18,21 @@ public class DummyNetworkManager implements NetworkManager {
     public DummyNetworkManager() {
     }
 
-    public void setAddressAndPort(String ipAddress, int port) {
+    public void setDestinationAddressAndPort(String ipAddress, int port) {
         this.secondClientAddress = ipAddress;
         this.secondClientPort = port;
+    }
+
+    @Override
+    public void setLocalPort(int localPort) {
+        this.localPort = localPort;
+    }
+
+    @Override
+    public void setUpServer() {
+        /*TODO
+         * Initialisieren Sie einen Server für den Versand und das Empfangen von Paketen
+         * */
     }
 
     @Override

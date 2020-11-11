@@ -432,6 +432,7 @@ import java.util.TreeSet;
  * <em>Computer Science: An Interdisciplinary Approach</em>
  * by Robert Sedgewick and Kevin Wayne.
  * <p>
+ *
  * @author Robert Sedgewick
  * @author Kevin Wayne
  */
@@ -681,6 +682,14 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
         return menuBar;
     }
 
+    /**
+     * Addition by Mike Birkhoff
+     *
+     * @return
+     */
+    public static JFrame getJFrame() {
+        return frame;
+    }
 
     /***************************************************************************
      *  User and screen coordinate systems.

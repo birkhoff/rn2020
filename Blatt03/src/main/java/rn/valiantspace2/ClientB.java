@@ -9,11 +9,14 @@ public class ClientB {
 
     /**
      * main method for client b
-     *
-     * @param args
      */
+
+    public static String IP_CLIENT_A = "localhost";
+    public static int PORT_CLIENT_A = 1234;
+    public static int LOCAL_PORT = 4321;
+
     public static void main(String[] args) {
         ValiantSpace2 game = new ValiantSpace2();
-        game.runGame("localhost", 1234);
+        game.runGame(LOCAL_PORT, IP_CLIENT_A, PORT_CLIENT_A);
     }
 }

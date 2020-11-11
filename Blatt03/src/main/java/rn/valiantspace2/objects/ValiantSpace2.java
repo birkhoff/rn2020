@@ -27,19 +27,25 @@ public class ValiantSpace2 {
     /**
      * Game loop
      */
-    public void runGame(String secondClientAddress, int secondClientPort) {
+    public void runGame(int localPort, String secondClientAddress, int secondClientPort) {
 
-        this.setUpGame(secondClientAddress, secondClientPort);
+        this.setUpNetworkManager(localPort, secondClientAddress, secondClientPort);
+        this.setUpGame();
         this.waitForPlayersLoop();
         ValiantSpace2Logic logic = new ValiantSpace2Logic(renderer);
         logic.initializeGameState(inputLocalPlayer, inputNetworkPlayer);
         this.runGameLoop(logic);
+        logic.shutDown();
     }
 
-    private void setUpGame(String secondClientAddress, int secondClientPort) {
-        // set up network handler
+    private void setUpNetworkManager(int localPort, String secondClientAddress, int secondClientPort) {
         networkManager = new DummyNetworkManager();
-        networkManager.setAddressAndPort(secondClientAddress, secondClientPort);
+        networkManager.setLocalPort(localPort);
+        networkManager.setDestinationAddressAndPort(secondClientAddress, secondClientPort);
+        networkManager.setUpServer();
+    }
+
+    private void setUpGame() {
         // set up input
         renderer = new SoftwareRenderer();
         inputLocalPlayer = new InputEvents();

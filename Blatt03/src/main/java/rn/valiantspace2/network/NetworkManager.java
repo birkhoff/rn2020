@@ -10,12 +10,24 @@ public interface NetworkManager {
      * @param ipAddress ip address of network player
      * @param port      port of network player
      */
-    void setAddressAndPort(String ipAddress, int port);
+    void setDestinationAddressAndPort(String ipAddress, int port);
+
+    /**
+     * Set the local port we want to use to receive packages
+     *
+     * @param localPort port on this computer which receives packets
+     */
+    void setLocalPort(int localPort);
+
+    /**
+     * Set up the server and start listening
+     */
+    void setUpServer();
 
     /**
      * send own input events over the network
      *
-     * @param inputEvents
+     * @param inputEvents input events from local player
      */
     void sendInput(InputEvents inputEvents);
 

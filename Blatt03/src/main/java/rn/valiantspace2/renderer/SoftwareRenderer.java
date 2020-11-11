@@ -3,6 +3,8 @@ package rn.valiantspace2.renderer;
 
 import rn.valiantspace2.renderer.data.SceneNode;
 
+import javax.swing.*;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +74,23 @@ public class SoftwareRenderer {
         return System.currentTimeMillis() - startTime;
     }
 
+    /**
+     * Pauses Rendering Loop
+     *
+     * @param ms length of pause in milliseconds
+     */
+    public void pause(long ms) {
+        StdDraw.pause((int) ms);
+    }
+
+    /**
+     * close the rendering window
+     */
+    public void close() {
+        JFrame frame = StdDraw.getJFrame();
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+    }
+
     private void rotatePolygongs(List<SceneNode> nodes, float[][] modelView) {
         for (SceneNode node : nodes) {
             if (node.isVisible()) {
@@ -88,16 +107,16 @@ public class SoftwareRenderer {
 
     private void drawPolygongs() {
         // draw polygons
-        for (int i = 0; i < drawablePolygons.size(); i++) {
-            int color[] = drawablePolygons.get(i).get_color();
+        for (Polygon drawablePolygon : drawablePolygons) {
+            int color[] = drawablePolygon.get_color();
             StdDraw.setPenColor(color[0], color[1], color[2]);
-            StdDraw.filledPolygon(drawablePolygons.get(i).get_x_coords(),
-                    drawablePolygons.get(i).get_y_coords());
+            StdDraw.filledPolygon(drawablePolygon.get_x_coords(),
+                    drawablePolygon.get_y_coords());
 
             if (draw_raster) {
                 StdDraw.setPenColor(StdDraw.BLACK);
-                StdDraw.polygon(drawablePolygons.get(i).get_x_coords(),
-                        drawablePolygons.get(i).get_y_coords());
+                StdDraw.polygon(drawablePolygon.get_x_coords(),
+                        drawablePolygon.get_y_coords());
             }
         }
     }
@@ -138,10 +157,10 @@ public class SoftwareRenderer {
     /**
      * creates a polygon out of a list of points
      *
-     * @param coords
+     * @param coords      coordinates
      * @param numPolygons how many points each polygon has
      *                    triangles have 3, quads have 4
-     * @param color
+     * @param color       color of polygon
      */
 
 
@@ -165,7 +184,7 @@ public class SoftwareRenderer {
      * polygons furthest away are drawn first, polygons closer are drawn over them
      * this is a simple depth test
      *
-     * @param p
+     * @param p polygon
      */
 
 

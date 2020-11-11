@@ -8,8 +8,6 @@ import rn.valiantspace2.renderer.SoftwareRenderer;
 import rn.valiantspace2.renderer.data.SceneNode;
 import rn.valiantspace2.renderer.parser.StanfordTriangleParser;
 
-import java.util.ArrayList;
-
 /**
  * Logic for Valiant Space 2
  *
@@ -28,10 +26,7 @@ public class ValiantSpace2Logic {
     private SpaceShip shipOpponent;
     private Camera cam;
 
-    private ArrayList<SceneNode> LasersIdle = new ArrayList();
-    private ArrayList<SceneNode> Lasers = new ArrayList();
-
-    long timeSinceLastFrame = 0;
+    long INTERVAL_30_FPS = 32; // 30FPS
 
 
     /**
@@ -44,6 +39,12 @@ public class ValiantSpace2Logic {
         this.renderer = renderer;
     }
 
+    /**
+     * Close render window and shutdown logic
+     */
+    public void shutDown() {
+        renderer.close();
+    }
 
     /**
      * setup game state
@@ -75,20 +76,27 @@ public class ValiantSpace2Logic {
      */
     public void update(InputEvents inputLocalPlayer, InputEvents inputNetworkPlayer) {
 
-        shipPlayer.updateShip(timeSinceLastFrame, inputLocalPlayer, renderer);
-        shipOpponent.updateShip(timeSinceLastFrame, inputNetworkPlayer, renderer);
+        long startTime = System.currentTimeMillis();
+
+        shipPlayer.updateShip(INTERVAL_30_FPS, inputLocalPlayer, renderer);
+        shipOpponent.updateShip(INTERVAL_30_FPS, inputNetworkPlayer, renderer);
         // check collision
         checkCollision(shipPlayer, shipOpponent);
         checkCollision(shipOpponent, shipPlayer);
         // draw
-        timeSinceLastFrame = renderer.render();
+        renderer.render();
+
+        long loopDuration = System.currentTimeMillis() - startTime;
+        if (loopDuration < INTERVAL_30_FPS) {
+            renderer.pause(INTERVAL_30_FPS - loopDuration);
+        }
     }
 
     /**
      * Set initial position in space for a ship
      *
-     * @param ship
-     * @param inputEvents
+     * @param ship        ship to set position and rotation
+     * @param inputEvents coordinates to get translation and rotation from
      */
     private void placeSpaceship(SpaceShip ship, InputEvents inputEvents) {
         ship.getNode().setTranslate(inputEvents.getStartX(), 0, inputEvents.getStartZ());

@@ -25,6 +25,18 @@ public interface NetworkManager {
     void setUpServer();
 
     /**
+     * Stops the server
+     */
+    void stopServer();
+
+    /**
+     * Try to establish a connection with the other client
+     *
+     * @return true if success
+     */
+    boolean tryConnectingToOtherClient();
+
+    /**
      * send own input events over the network
      *
      * @param inputEvents input events from local player

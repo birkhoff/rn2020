@@ -11,6 +11,7 @@ public class DummyNetworkManager implements NetworkManager {
     private String secondClientAddress;
     private int secondClientPort;
     private int localPort;
+    
 
     /**
      * Constructor which receives the ip address of the second client to connect to
@@ -30,9 +31,34 @@ public class DummyNetworkManager implements NetworkManager {
 
     @Override
     public void setUpServer() {
+
         /*TODO
          * Initialisieren Sie einen Server für den Versand und das Empfangen von Paketen
+         * Nuzten Sie den ServerSocket! Dieser blockiert wenn er Verbindungen akzeptiert,
+         * also lassen Sie ihn in einem extra Thread laufen!
          * */
+
+    }
+
+    @Override
+    public boolean tryConnectingToOtherClient() {
+
+        boolean connectionEstablished = false;
+
+        /*Todo
+         * Verbinden Sie sich mit einem anderen Peer
+         * Nutzen Sie hierfür einen weiteren Socket der als Parameter die IP und Port des
+         * Servers entgegennimmt
+         * */
+
+        return connectionEstablished;
+    }
+
+    @Override
+    public void stopServer() {
+        /*Todo
+         * Schließen Sie alle Verbindungen
+         */
     }
 
     @Override
@@ -41,6 +67,7 @@ public class DummyNetworkManager implements NetworkManager {
         /*TODO
          * Implementieren Sie den Versand der Eingaben
          * */
+
         System.out.println("VS2 Packet"
                 + "\n" + inputEvents.isFire()
                 + "\n" + inputEvents.isForward()
@@ -50,6 +77,7 @@ public class DummyNetworkManager implements NetworkManager {
                 + "\n" + inputEvents.getStartZ()
                 + "\n" + inputEvents.getStartRy()
         );
+
     }
 
     @Override

@@ -35,7 +35,7 @@ public class ValiantSpace2 {
         ValiantSpace2Logic logic = new ValiantSpace2Logic(renderer);
         logic.initializeGameState(inputLocalPlayer, inputNetworkPlayer);
         this.runGameLoop(logic);
-        logic.shutDown();
+        this.shutDownGame(logic, networkManager);
     }
 
     private void setUpNetworkManager(int localPort, String secondClientAddress, int secondClientPort) {
@@ -43,6 +43,12 @@ public class ValiantSpace2 {
         networkManager.setLocalPort(localPort);
         networkManager.setDestinationAddressAndPort(secondClientAddress, secondClientPort);
         networkManager.setUpServer();
+        networkManager.tryConnectingToOtherClient();
+    }
+
+    private void shutDownGame(ValiantSpace2Logic logic, NetworkManager networkManager) {
+        logic.shutDown();
+        networkManager.stopServer();
     }
 
     private void setUpGame() {
